@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="right-tools" style="display: flex; gap: 10px;">
-                    <a href="?controller=BookingController&action=exportExcel" class="btn-custom-white" style="background: #27ae60; color: white; text-decoration: none; padding: 10px 15px; display: inline-flex; align-items: center; gap: 5px;">
+                    <a href="?controller=BookingController&action=exportExcel" class="btn-custom-white" style="background: #ffffff; color: #000000; text-decoration: none; padding: 10px 15px; display: inline-flex; align-items: center; gap: 5px;">
                         <i class="fas fa-file-excel"></i> Xuất Excel
                     </a>
                 </div>
