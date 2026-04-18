@@ -6,3 +6,54 @@ Error in firstWhere clause: Table 'web_hotel_mngt.accounts_account' doesn't exis
 #3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
 #4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
 #5 {main}
+[2026-04-18 10:12:54] ERROR: Error in GuestController::store
+Error creating record: Unknown column 'name' in 'field list'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\GuestController.php(95): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\GuestController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-18 10:13:54] ERROR: Error in GuestController::store
+Error creating record: Unknown column 'name' in 'field list'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\GuestController.php(95): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\GuestController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-18 10:18:30] ERROR: Error in GuestController::store
+Error creating record: Unknown column 'name' in 'field list'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\GuestController.php(95): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\GuestController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-18 10:21:16] ERROR: Error in GuestController::store
+Error creating record: Unknown column 'DiaChiKhachHang' in 'field list'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Models\Guest.php(92): Shared\Models\BaseModel->create(Array)
+#1 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\GuestController.php(95): Shared\Models\Guest->create(Array)
+#2 [internal function]: Api\Controllers\GuestController->store()
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#5 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#6 {main}
+[2026-04-18 10:24:13] ERROR: Error in GuestController::store
+Error creating record: Unknown column 'DiaChiKhachHang' in 'field list'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Models\Guest.php(92): Shared\Models\BaseModel->create(Array)
+#1 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\GuestController.php(95): Shared\Models\Guest->create(Array)
+#2 [internal function]: Api\Controllers\GuestController->store()
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#5 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#6 {main}
+[2026-04-18 10:24:15] ERROR: Error in GuestController::store
+Error creating record: Unknown column 'DiaChiKhachHang' in 'field list'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Models\Guest.php(92): Shared\Models\BaseModel->create(Array)
+#1 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\GuestController.php(95): Shared\Models\Guest->create(Array)
+#2 [internal function]: Api\Controllers\GuestController->store()
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#5 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#6 {main}

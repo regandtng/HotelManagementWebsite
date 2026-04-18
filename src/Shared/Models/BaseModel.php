@@ -66,7 +66,7 @@ class BaseModel {
         try {
             $offset = ($page - 1) * $perPage;
             $sql = "SELECT * FROM {$this->table} LIMIT ? OFFSET ?";
-            $result = $this->dbInstance->select($sql, [$perPage, $offset]);
+            $result = $this->dbInstance->select($sql, [(int)$perPage, (int)$offset]);
             return $result;
         } catch (\Exception $e) {
             throw new \Exception("Error paginating records: " . $e->getMessage());

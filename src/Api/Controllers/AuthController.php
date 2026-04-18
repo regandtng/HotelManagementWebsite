@@ -4,6 +4,7 @@ namespace Api\Controllers;
 use Api\BaseApiController;
 use Shared\Auth\JWT;
 use Shared\Models\Account;
+use Shared\Models\Guest;
 
 class AuthController extends BaseApiController {
     /**
@@ -22,6 +23,18 @@ class AuthController extends BaseApiController {
 
             $accountModel = new Account();
             $account = $accountModel->findByUsername($data['username']);
+            $accountType = 'admin';
+
+            if (!$account) {
+                $account = $accountModel->findLoginByUsername($data['username']);
+                $accountType = $account ? 'staff' : null;
+            }
+
+            if (!$account) {
+                $guestModel = new Guest();
+                $account = $guestModel->findByPhone($data['username']);
+                $accountType = $account ? 'guest' : null;
+            }
 
             if (!$account) {
                 $this->response->unauthorized('Tên đăng nhập hoặc mật khẩu không đúng');
@@ -34,22 +47,50 @@ class AuthController extends BaseApiController {
                 return;
             }
 
-            // Tạo payload cho JWT
-            $payload = [
-                'id' => $account['MaAdmin'],
-                'username' => $account['TenDangNhap'],
-                'role' => 'admin'
-            ];
+            $payload = [];
+            $user = [];
+
+            if ($accountType === 'admin') {
+                $payload = [
+                    'id' => $account['MaAdmin'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'admin'
+                ];
+                $user = [
+                    'id' => $account['MaAdmin'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'admin'
+                ];
+            } elseif ($accountType === 'staff') {
+                $payload = [
+                    'id' => $account['MaDangNhap'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'staff'
+                ];
+                $user = [
+                    'id' => $account['MaDangNhap'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'staff'
+                ];
+            } else {
+                $payload = [
+                    'id' => $account['MaKhachHang'],
+                    'username' => $account['SoDienThoaiKhachHang'],
+                    'role' => 'guest'
+                ];
+                $user = [
+                    'id' => $account['MaKhachHang'],
+                    'username' => $account['SoDienThoaiKhachHang'],
+                    'role' => 'guest',
+                    'name' => trim(($account['HoKhachHang'] ?? '') . ' ' . ($account['TenKhachHang'] ?? ''))
+                ];
+            }
 
             $token = JWT::encode($payload);
 
             $this->response->success([
                 'token' => $token,
-                'user' => [
-                    'id' => $account['MaTaiKhoan'],
-                    'username' => $account['TenTaiKhoan'],
-                    'role' => $account['VaiTro']
-                ]
+                'user' => $user
             ], 'Đăng nhập thành công');
 
         } catch (\Exception $e) {
@@ -69,21 +110,42 @@ class AuthController extends BaseApiController {
                 return;
             }
 
-            $accountModel = new Account();
-            $account = $accountModel->find($user['id']);
+            $accountType = $user['role'] ?? 'admin';
+            $account = null;
+
+            if ($accountType === 'admin') {
+                $accountModel = new Account();
+                $account = $accountModel->find($user['id']);
+                $responseUser = [
+                    'id' => $account['MaAdmin'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'admin'
+                ];
+            } elseif ($accountType === 'staff') {
+                $accountModel = new Account();
+                $account = $accountModel->findLoginById($user['id']);
+                $responseUser = [
+                    'id' => $account['MaDangNhap'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'staff'
+                ];
+            } else {
+                $guestModel = new Guest();
+                $account = $guestModel->find($user['id']);
+                $responseUser = [
+                    'id' => $account['MaKhachHang'],
+                    'username' => $account['SoDienThoaiKhachHang'],
+                    'role' => 'guest',
+                    'name' => trim(($account['HoKhachHang'] ?? '') . ' ' . ($account['TenKhachHang'] ?? ''))
+                ];
+            }
 
             if (!$account) {
                 $this->response->notFound('Không tìm thấy tài khoản');
                 return;
             }
 
-            $this->response->success([
-                'user' => [
-                    'id' => $account['MaAdmin'],
-                    'username' => $account['TenDangNhap'],
-                    'role' => 'admin'
-                ]
-            ]);
+            $this->response->success(['user' => $responseUser]);
 
         } catch (\Exception $e) {
             $this->logError('Get user info error', $e);
