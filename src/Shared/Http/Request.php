@@ -112,14 +112,26 @@ class Request {
     private function parsePath() {
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $script = $_SERVER['SCRIPT_NAME'];
+        $scriptDir = dirname($script);
 
-        if (strpos($path, $script) === 0) {
+        $pathLower = strtolower($path);
+        $scriptDirLower = strtolower($scriptDir);
+        $scriptLower = strtolower($script);
+
+        // Nếu ứng dụng nằm trong thư mục con, loại bỏ phần đường dẫn gốc
+        if ($scriptDir !== '/' && stripos($pathLower, $scriptDirLower) === 0) {
+            $path = substr($path, strlen($scriptDir));
+            $pathLower = strtolower($path);
+        }
+
+        if (stripos($pathLower, $scriptLower) === 0) {
             $path = substr($path, strlen($script));
         } elseif (!empty($_SERVER['PATH_INFO'])) {
             $path = $_SERVER['PATH_INFO'];
         }
 
-        return $path;
+        $path = '/' . trim($path, '/');
+        return $path === '/' ? '/' : $path;
     }
 
     private function parseInput() {

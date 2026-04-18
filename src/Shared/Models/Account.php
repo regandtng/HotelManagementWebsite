@@ -2,7 +2,7 @@
 namespace Shared\Models;
 
 class Account extends BaseModel {
-    protected $table = 'accounts';
+    protected $table = 'accounts_account';
 
     /**
      * Tìm account theo email

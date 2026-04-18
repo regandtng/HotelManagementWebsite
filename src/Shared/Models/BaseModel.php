@@ -46,8 +46,8 @@ class BaseModel {
      */
     public function find($id) {
         try {
-            $sql = "SELECT * FROM {$this->table} WHERE id = {$id}";
-            $result = $this->dbInstance->selectOne($sql);
+            $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+            $result = $this->dbInstance->selectOne($sql, [$id]);
             return $result;
         } catch (\Exception $e) {
             throw new \Exception("Error finding record: " . $e->getMessage());
@@ -60,8 +60,8 @@ class BaseModel {
     public function paginate($page = 1, $perPage = 10) {
         try {
             $offset = ($page - 1) * $perPage;
-            $sql = "SELECT * FROM {$this->table} LIMIT {$perPage} OFFSET {$offset}";
-            $result = $this->dbInstance->select($sql);
+            $sql = "SELECT * FROM {$this->table} LIMIT ? OFFSET ?";
+            $result = $this->dbInstance->select($sql, [$perPage, $offset]);
             return $result;
         } catch (\Exception $e) {
             throw new \Exception("Error paginating records: " . $e->getMessage());
@@ -87,16 +87,13 @@ class BaseModel {
     public function create($data) {
         try {
             $columns = implode(', ', array_keys($data));
-            $values = implode(', ', array_map(function($v) {
-                return is_string($v) ? "'{$v}'" : $v;
-            }, array_values($data)));
-            
-            $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$values})";
-            $this->dbInstance->execute($sql);
-            
+            $placeholders = str_repeat('?,', count($data) - 1) . '?';
+
+            $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
+            $this->dbInstance->execute($sql, array_values($data));
+
             // Get the last inserted ID
-            $connection = $this->getConnection();
-            $lastId = mysqli_insert_id($connection);
+            $lastId = $this->dbInstance->insertId();
             return $this->find($lastId);
         } catch (\Exception $e) {
             throw new \Exception("Error creating record: " . $e->getMessage());
@@ -108,15 +105,14 @@ class BaseModel {
      */
     public function update($id, $data) {
         try {
-            $updateParts = [];
-            foreach ($data as $key => $value) {
-                $val = is_string($value) ? "'{$value}'" : $value;
-                $updateParts[] = "{$key} = {$val}";
-            }
-            $updateStr = implode(', ', $updateParts);
-            
-            $sql = "UPDATE {$this->table} SET {$updateStr} WHERE id = {$id}";
-            $this->dbInstance->execute($sql);
+            $columns = array_keys($data);
+            $placeholders = implode(' = ?, ', $columns) . ' = ?';
+
+            $sql = "UPDATE {$this->table} SET {$placeholders} WHERE id = ?";
+            $params = array_values($data);
+            $params[] = $id;
+
+            $this->dbInstance->execute($sql, $params);
             return $this->find($id);
         } catch (\Exception $e) {
             throw new \Exception("Error updating record: " . $e->getMessage());
@@ -128,8 +124,8 @@ class BaseModel {
      */
     public function delete($id) {
         try {
-            $sql = "DELETE FROM {$this->table} WHERE id = {$id}";
-            return $this->dbInstance->execute($sql);
+            $sql = "DELETE FROM {$this->table} WHERE id = ?";
+            return $this->dbInstance->execute($sql, [$id]);
         } catch (\Exception $e) {
             throw new \Exception("Error deleting record: " . $e->getMessage());
         }
@@ -146,11 +142,27 @@ class BaseModel {
         }
 
         try {
-            $val = is_string($value) ? "'{$value}'" : $value;
-            $sql = "SELECT * FROM {$this->table} WHERE {$column} {$condition} {$val}";
-            return $this->dbInstance->select($sql);
+            $sql = "SELECT * FROM {$this->table} WHERE {$column} {$condition} ?";
+            return $this->dbInstance->select($sql, [$value]);
         } catch (\Exception $e) {
             throw new \Exception("Error in where clause: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Tìm record đầu tiên theo condition
+     */
+    public function firstWhere($column, $condition, $value = null) {
+        if ($value === null) {
+            $value = $condition;
+            $condition = '=';
+        }
+
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE {$column} {$condition} ? LIMIT 1";
+            return $this->dbInstance->selectOne($sql, [$value]);
+        } catch (\Exception $e) {
+            throw new \Exception("Error in firstWhere clause: " . $e->getMessage());
         }
     }
 
@@ -159,7 +171,7 @@ class BaseModel {
      */
     public function query($sql, $params = []) {
         try {
-            return $this->dbInstance->select($sql);
+            return $this->dbInstance->select($sql, $params);
         } catch (\Exception $e) {
             throw new \Exception("Error executing query: " . $e->getMessage());
         }

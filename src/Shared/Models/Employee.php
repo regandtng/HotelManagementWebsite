@@ -2,7 +2,7 @@
 namespace Shared\Models;
 
 class Employee extends BaseModel {
-    protected $table = 'employees';
+    protected $table = 'hotels_employees';
 
     /**
      * Tìm employees theo department

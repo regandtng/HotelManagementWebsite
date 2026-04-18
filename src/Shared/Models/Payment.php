@@ -2,7 +2,7 @@
 namespace Shared\Models;
 
 class Payment extends BaseModel {
-    protected $table = 'payments';
+    protected $table = 'payments_payment';
 
     /**
      * Tìm payments theo booking

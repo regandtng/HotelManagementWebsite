@@ -2,7 +2,7 @@
 namespace Shared\Models;
 
 class Room extends BaseModel {
-    protected $table = 'rooms';
+    protected $table = 'rooms_room';
 
     /**
      * Tìm rooms theo type

@@ -1,53 +1,210 @@
-# API Testing Guide
+# Hotel Management API - Testing Guide
 
-## Quick Testing with cURL
+## Tổng quan
+API RESTful cho hệ thống quản lý khách sạn với authentication JWT và bảo mật SQL injection.
 
-### 1. Test API Info Endpoint
+## Cài đặt Postman
+1. Import file `Hotel_Management_API.postman_collection.json` vào Postman
+2. Cập nhật biến `base_url` thành URL của bạn (mặc định: `http://localhost/Hotel_Management_Website`)
 
-Get information about the API:
-
-```bash
-curl -X GET "http://localhost/Hotel_Management_Website/api/v1" \
-  -H "Content-Type: application/json"
+## Authentication
+Tất cả endpoints (trừ login) đều yêu cầu JWT token trong header:
+```
+Authorization: Bearer <your_jwt_token>
 ```
 
-**Expected Response (200 OK):**
+### 1. Đăng nhập với cURL
+```bash
+curl -X POST "http://localhost/Hotel_Management_Website/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "password123"
+  }'
+```
+
+**Response:**
 ```json
 {
-    "message": "Hotel Management REST API",
-    "version": "1.0",
-    "endpoints": [
-        "guests",
-        "bookings",
-        "rooms",
-        "room-types",
-        "services",
-        ...
-    ],
-    "documentation": {
-        "GET /{resource}": "List all resources with pagination",
-        "GET /{resource}/{id}": "Get a specific resource",
-        ...
+  "success": true,
+  "data": {
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "user": {
+      "id": 1,
+      "username": "admin",
+      "role": "admin"
     }
+  },
+  "message": "Đăng nhập thành công"
 }
 ```
 
----
-
-## Testing GUESTS Resource
-
-### Get All Guests
-
+### 2. Sử dụng token cho các request khác
 ```bash
+TOKEN="your_jwt_token_here"
 curl -X GET "http://localhost/Hotel_Management_Website/api/v1/guests" \
+  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json"
 ```
 
-### Get All Guests with Pagination
+## API Endpoints
 
+### Authentication
+- `POST /api/v1/auth/login` - Đăng nhập
+- `GET /api/v1/auth/me` - Lấy thông tin user hiện tại
+- `POST /api/v1/auth/logout` - Đăng xuất
+
+### Guests (Khách hàng)
+- `GET /api/v1/guests` - Lấy danh sách khách hàng (có phân trang và tìm kiếm)
+- `POST /api/v1/guests` - Tạo khách hàng mới
+- `GET /api/v1/guests/{id}` - Lấy chi tiết khách hàng
+- `PUT /api/v1/guests/{id}` - Cập nhật khách hàng
+- `DELETE /api/v1/guests/{id}` - Xóa khách hàng
+
+### Bookings (Đặt phòng)
+- `GET /api/v1/bookings` - Lấy danh sách đặt phòng
+- `POST /api/v1/bookings` - Tạo đặt phòng mới
+- `GET /api/v1/bookings/{id}` - Lấy chi tiết đặt phòng
+- `PUT /api/v1/bookings/{id}` - Cập nhật đặt phòng
+- `DELETE /api/v1/bookings/{id}` - Xóa đặt phòng
+
+### Rooms (Phòng)
+- `GET /api/v1/rooms` - Lấy danh sách phòng
+- `POST /api/v1/rooms` - Tạo phòng mới
+- `GET /api/v1/rooms/{id}` - Lấy chi tiết phòng
+- `PUT /api/v1/rooms/{id}` - Cập nhật phòng
+- `DELETE /api/v1/rooms/{id}` - Xóa phòng
+
+### Services (Dịch vụ)
+- `GET /api/v1/services` - Lấy danh sách dịch vụ
+- `POST /api/v1/services` - Tạo dịch vụ mới
+- `GET /api/v1/services/{id}` - Lấy chi tiết dịch vụ
+- `PUT /api/v1/services/{id}` - Cập nhật dịch vụ
+- `DELETE /api/v1/services/{id}` - Xóa dịch vụ
+
+### Employees (Nhân viên)
+- `GET /api/v1/employees` - Lấy danh sách nhân viên
+- `POST /api/v1/employees` - Tạo nhân viên mới
+- `GET /api/v1/employees/{id}` - Lấy chi tiết nhân viên
+- `PUT /api/v1/employees/{id}` - Cập nhật nhân viên
+- `DELETE /api/v1/employees/{id}` - Xóa nhân viên
+
+## Query Parameters
+- `page`: Số trang (mặc định: 1)
+- `per_page`: Số item mỗi trang (mặc định: 10, tối đa: 100)
+- `search`: Từ khóa tìm kiếm (cho guests)
+
+## Response Format
+```json
+{
+  "success": true,
+  "data": {...},
+  "message": "Success message",
+  "meta": {
+    "page": 1,
+    "per_page": 10,
+    "total": 100
+  }
+}
+```
+
+## Error Responses
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "errors": {...}
+}
+```
+
+## Bảo mật đã triển khai
+- ✅ JWT Authentication
+- ✅ SQL Injection protection (Prepared statements)
+- ✅ Input validation
+- ✅ Role-based access control
+- ✅ Error logging
+
+## Test Scenarios với cURL
+
+### 1. Test Authentication
 ```bash
-curl -X GET "http://localhost/Hotel_Management_Website/api/v1/guests?page=1&per_page=10" \
-  -H "Content-Type: application/json"
+# Login
+curl -X POST "http://localhost/Hotel_Management_Website/api/v1/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "password123"}'
+
+# Get current user (sử dụng token từ response login)
+curl -X GET "http://localhost/Hotel_Management_Website/api/v1/auth/me" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+### 2. Test CRUD Operations
+```bash
+TOKEN="your_token_here"
+
+# Create guest
+curl -X POST "http://localhost/Hotel_Management_Website/api/v1/guests" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "phone": "+1234567890"
+  }'
+
+# Get guests with search
+curl -X GET "http://localhost/Hotel_Management_Website/api/v1/guests?search=john&page=1&per_page=5" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Update guest
+curl -X PUT "http://localhost/Hotel_Management_Website/api/v1/guests/1" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Smith",
+    "email": "johnsmith@example.com"
+  }'
+
+# Delete guest
+curl -X DELETE "http://localhost/Hotel_Management_Website/api/v1/guests/1" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### 3. Test Error Handling
+```bash
+# Unauthorized access
+curl -X GET "http://localhost/Hotel_Management_Website/api/v1/guests"
+
+# Invalid token
+curl -X GET "http://localhost/Hotel_Management_Website/api/v1/guests" \
+  -H "Authorization: Bearer invalid_token"
+
+# Validation error
+curl -X POST "http://localhost/Hotel_Management_Website/api/v1/guests" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "invalid-email"}'
+```
+
+## Troubleshooting
+- **401 Unauthorized**: Token không hợp lệ hoặc hết hạn
+- **403 Forbidden**: Không có quyền truy cập
+- **404 Not Found**: Endpoint hoặc resource không tồn tại
+- **422 Unprocessable Entity**: Dữ liệu validation lỗi
+- **500 Internal Server Error**: Lỗi server (check logs trong `src/storage/logs/api.log`)
+
+## Database Schema Notes
+API sử dụng các bảng với tên tiếng Việt:
+- `hotels_guests` (guests)
+- `bookings_booking` (bookings)
+- `rooms_room` (rooms)
+- `hotels_employees` (employees)
+- `services_service` (services)
+- `payments_payment` (payments)
+- `discounts_discount` (discounts)
+- `departments_department` (departments)
+- `room_types_roomtype` (room_types)
+- `accounts_account` (accounts)
 ```
 
 ### Search Guests

@@ -2,6 +2,6 @@
 namespace Shared\Models;
 
 class Service extends BaseModel {
-    protected $table = 'services';
+    protected $table = 'services_service';
 }
 ?>

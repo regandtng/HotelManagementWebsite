@@ -2,6 +2,6 @@
 namespace Shared\Models;
 
 class Discount extends BaseModel {
-    protected $table = 'discounts';
+    protected $table = 'discounts_discount';
 }
 ?>

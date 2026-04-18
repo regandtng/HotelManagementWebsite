@@ -17,7 +17,12 @@ class Router {
     public function loadRoutes($routesFile) {
         $routes = require $routesFile;
         foreach ($routes as $route) {
-            $this->addRoute($route[0], $route[1], $route[2], $route[3]);
+            $method = $route[0];
+            $path = $route[1];
+            $controller = $route[2];
+            $action = $route[3];
+            $middleware = $route[4] ?? null; // Optional middleware
+            $this->addRoute($method, $path, $controller, $action, $middleware);
         }
         return $this;
     }
@@ -25,12 +30,13 @@ class Router {
     /**
      * Thêm một route
      */
-    public function addRoute($method, $path, $controller, $action) {
+    public function addRoute($method, $path, $controller, $action, $middleware = null) {
         $this->routes[] = [
             'method' => strtoupper($method),
             'path' => $path,
             'controller' => $controller,
             'action' => $action,
+            'middleware' => $middleware,
         ];
         return $this;
     }
@@ -74,6 +80,13 @@ class Router {
     }
 
     private function handleRoute($route, $matches) {
+        // Check middleware first
+        if (isset($route['middleware']) && $route['middleware']) {
+            if (!$this->checkMiddleware($route['middleware'])) {
+                return; // Middleware đã gửi response
+            }
+        }
+
         $controllerName = $route['controller'];
         $action = $route['action'];
 
@@ -101,6 +114,19 @@ class Router {
             return call_user_func([$controller, $action]);
         } catch (\Exception $e) {
             return $this->response->error($e->getMessage(), 500);
+        }
+    }
+
+    private function checkMiddleware($middleware) {
+        switch ($middleware) {
+            case 'auth':
+                $authMiddleware = new \Shared\Middleware\AuthMiddleware();
+                return $authMiddleware->handle();
+            case 'admin':
+                $authMiddleware = new \Shared\Middleware\AuthMiddleware();
+                return $authMiddleware->checkRole('admin');
+            default:
+                return true; // No middleware or unknown middleware
         }
     }
 }

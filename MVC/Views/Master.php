@@ -4,11 +4,17 @@
     <meta charset="UTF-8">
     <title>Hệ Thống Khách Sạn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="./Public/Css/style_hello.css">
-    <link rel="stylesheet" href="./Public/Css/login_style.css">
-    <link rel="stylesheet" href="./Public/Css/admin_style.css"> 
-    <link rel="stylesheet" href="./Public/Css/department_style.css">
-    <link rel="stylesheet" href="./Public/Css/employee_style.css">
+    <?php
+        $baseUrl = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+        if ($baseUrl === '/' || $baseUrl === '\\') {
+            $baseUrl = '';
+        }
+    ?>
+ <link rel="stylesheet" href="<?php echo $baseUrl; ?>/Public/Css/style_hello.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/Public/Css/login_style.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/Public/Css/admin_style.css"> 
+    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/Public/Css/department_style.css">
+    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/Public/Css/employee_style.css">
 </head>
 <body class="<?php echo isset($_GET['controller']) ? $_GET['controller'] : 'Default'; ?>">
 

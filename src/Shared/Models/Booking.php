@@ -2,7 +2,7 @@
 namespace Shared\Models;
 
 class Booking extends BaseModel {
-    protected $table = 'bookings';
+    protected $table = 'bookings_booking';
 
     /**
      * Tìm bookings của guest

@@ -1,0 +1,8 @@
+[2026-04-18 09:36:41] ERROR: Login error
+Error in firstWhere clause: Table 'web_hotel_mngt.accounts_account' doesn't exist
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\AuthController.php(24): Shared\Models\BaseModel->firstWhere('TenTaiKhoan', '=')
+#1 [internal function]: Api\Controllers\AuthController->login()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}

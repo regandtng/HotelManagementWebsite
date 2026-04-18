@@ -14,6 +14,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
+// Start session for API authentication
+session_start();
+
 // Create storage/logs directory if it doesn't exist
 $logDir = BASE_PATH . '/storage/logs';
 if (!is_dir($logDir)) {
@@ -22,23 +25,8 @@ if (!is_dir($logDir)) {
 
 // Autoloader for our namespaced classes
 spl_autoload_register(function($class) {
-    $prefix = 'Shared\\'; // Namespace prefix
-    $len = strlen($prefix);
-    
-    if (strncmp($prefix, $class, $len) !== 0) {
-        $prefix = 'Api\\'; // Try Api namespace
-        $len = strlen($prefix);
-        if (strncmp($prefix, $class, $len) !== 0) {
-            return; // Class not in our namespaces
-        }
-    }
-    
-    // Remove namespace prefix
-    $relative_class = substr($class, $len);
-    
-    // Convert namespace to file path
-    $file = BASE_PATH . '/src/' . str_replace('\\', '/', $relative_class) . '.php';
-    
+    // Map namespace directly to the src directory
+    $file = BASE_PATH . '/src/' . str_replace('\\', '/', $class) . '.php';
     if (file_exists($file)) {
         require_once $file;
     }

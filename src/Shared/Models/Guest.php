@@ -2,7 +2,7 @@
 namespace Shared\Models;
 
 class Guest extends BaseModel {
-    protected $table = 'guests';
+    protected $table = 'hotels_guests';
 
     /**
      * Tìm guests theo tên (search)
