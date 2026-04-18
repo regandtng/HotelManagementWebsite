@@ -23,5 +23,29 @@ class Account extends BaseModel {
             throw new \Exception("Error finding account: " . $e->getMessage());
         }
     }
+
+    /**
+     * Tìm account nhân viên theo username
+     */
+    public function findLoginByUsername($username) {
+        try {
+            $sql = "SELECT * FROM authentication_login WHERE TenDangNhap = ? LIMIT 1";
+            return $this->dbInstance->selectOne($sql, [$username]);
+        } catch (\Exception $e) {
+            throw new \Exception("Error finding login account: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Tìm account nhân viên theo ID
+     */
+    public function findLoginById($id) {
+        try {
+            $sql = "SELECT * FROM authentication_login WHERE MaDangNhap = ? LIMIT 1";
+            return $this->dbInstance->selectOne($sql, [$id]);
+        } catch (\Exception $e) {
+            throw new \Exception("Error finding login account by ID: " . $e->getMessage());
+        }
+    }
 }
 ?>
