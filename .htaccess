@@ -1,5 +1,5 @@
 RewriteEngine On
-RewriteBase /HOTEL_MANAGEMENT_website/
+RewriteBase /HotelManagementWebsite/
 
 # Bypass rewrite for static assets
 RewriteRule ^(Public/.*)$ $1 [L,NC]
