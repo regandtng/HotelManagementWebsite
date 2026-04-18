@@ -5,6 +5,7 @@ class BaseModel {
     protected $db;
     protected $dbInstance;
     protected $table = '';
+    protected $primaryKey = 'id';
 
     public function __construct() {
         // Get database connection
@@ -44,9 +45,13 @@ class BaseModel {
     /**
      * Tìm 1 record theo ID
      */
+    public function getPrimaryKey() {
+        return $this->primaryKey;
+    }
+
     public function find($id) {
         try {
-            $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+            $sql = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?";
             $result = $this->dbInstance->selectOne($sql, [$id]);
             return $result;
         } catch (\Exception $e) {
@@ -108,7 +113,7 @@ class BaseModel {
             $columns = array_keys($data);
             $placeholders = implode(' = ?, ', $columns) . ' = ?';
 
-            $sql = "UPDATE {$this->table} SET {$placeholders} WHERE id = ?";
+            $sql = "UPDATE {$this->table} SET {$placeholders} WHERE {$this->primaryKey} = ?";
             $params = array_values($data);
             $params[] = $id;
 
@@ -124,7 +129,7 @@ class BaseModel {
      */
     public function delete($id) {
         try {
-            $sql = "DELETE FROM {$this->table} WHERE id = ?";
+            $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = ?";
             return $this->dbInstance->execute($sql, [$id]);
         } catch (\Exception $e) {
             throw new \Exception("Error deleting record: " . $e->getMessage());

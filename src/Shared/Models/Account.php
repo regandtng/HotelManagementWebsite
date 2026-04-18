@@ -2,17 +2,23 @@
 namespace Shared\Models;
 
 class Account extends BaseModel {
-    protected $table = 'accounts_account';
+    protected $table = 'authentication_admin';
+    protected $primaryKey = 'MaAdmin';
+
+    /**
+     * Tìm account theo username
+     */
+    public function findByUsername($username) {
+        return $this->firstWhere('TenDangNhap', $username);
+    }
 
     /**
      * Tìm account theo email
      */
     public function findByEmail($email) {
         try {
-            $sql = "SELECT * FROM {$this->table} WHERE email = :email";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([':email' => $email]);
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
+            $sql = "SELECT * FROM {$this->table} WHERE email = ? LIMIT 1";
+            return $this->dbInstance->selectOne($sql, [$email]);
         } catch (\Exception $e) {
             throw new \Exception("Error finding account: " . $e->getMessage());
         }

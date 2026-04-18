@@ -21,18 +21,24 @@ class AuthController extends BaseApiController {
             }
 
             $accountModel = new Account();
-            $account = $accountModel->firstWhere('TenTaiKhoan', $data['username']);
+            $account = $accountModel->findByUsername($data['username']);
 
-            if (!$account || !password_verify($data['password'], $account['MatKhau'])) {
+            if (!$account) {
+                $this->response->unauthorized('Tên đăng nhập hoặc mật khẩu không đúng');
+                return;
+            }
+
+            $isValidPassword = password_verify($data['password'], $account['MatKhau']) || $data['password'] === $account['MatKhau'];
+            if (!$isValidPassword) {
                 $this->response->unauthorized('Tên đăng nhập hoặc mật khẩu không đúng');
                 return;
             }
 
             // Tạo payload cho JWT
             $payload = [
-                'id' => $account['MaTaiKhoan'],
-                'username' => $account['TenTaiKhoan'],
-                'role' => $account['VaiTro']
+                'id' => $account['MaAdmin'],
+                'username' => $account['TenDangNhap'],
+                'role' => 'admin'
             ];
 
             $token = JWT::encode($payload);
@@ -73,9 +79,9 @@ class AuthController extends BaseApiController {
 
             $this->response->success([
                 'user' => [
-                    'id' => $account['MaTaiKhoan'],
-                    'username' => $account['TenTaiKhoan'],
-                    'role' => $account['VaiTro']
+                    'id' => $account['MaAdmin'],
+                    'username' => $account['TenDangNhap'],
+                    'role' => 'admin'
                 ]
             ]);
 
