@@ -17,14 +17,14 @@ class GuestResource {
         if (!$guest) return null;
         
         return [
-            'id' => $guest['id'] ?? null,
-            'name' => $guest['name'] ?? null,
-            'email' => $guest['email'] ?? null,
-            'phone' => $guest['phone'] ?? null,
-            'address' => $guest['address'] ?? null,
-            'national_id' => $guest['national_id'] ?? null,
-            'created_at' => $guest['created_at'] ?? null,
-            'updated_at' => $guest['updated_at'] ?? null,
+            'id' => $guest['MaKhachHang'] ?? null,
+            'name' => trim(($guest['HoKhachHang'] ?? '') . ' ' . ($guest['TenKhachHang'] ?? '')) ?: null,
+            'email' => $guest['EmailKhachHang'] ?? null,
+            'phone' => $guest['SoDienThoaiKhachHang'] ?? null,
+            'address' => $guest['DiaChi'] ?? null,
+            'national_id' => $guest['CMND_CCCDKhachHang'] ?? null,
+            'created_at' => $guest['NgayTao'] ?? null,
+            'updated_at' => $guest['NgayTao'] ?? null,
         ];
     }
 }
