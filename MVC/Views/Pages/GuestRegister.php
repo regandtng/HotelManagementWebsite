@@ -17,6 +17,11 @@
             <form action="?controller=GuestController&action=handleRegister" method="POST" class="login-form">
                 <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="username">Tên đăng nhập:</label>
+                        <input type="text" name="username" id="username" class="form-control" required>
+                    </div>
+                    
                     <div class="input-group">
                         <label for="ho">Họ:</label>
                         <input type="text" name="ho" id="ho" class="form-control" required>
@@ -69,7 +74,7 @@
 
                 <p class="login-note">
                     <i class="fas fa-info-circle"></i> 
-                    Bạn sẽ dùng Số điện thoại để đăng nhập
+                    Bạn sẽ dùng Tên đăng nhập, Email hoặc Số điện thoại để đăng nhập
                 </p>
             </form>
         </div>

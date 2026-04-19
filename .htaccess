@@ -1,6 +1,10 @@
 RewriteEngine On
 RewriteBase /HotelManagementWebsite/
 
+# Preserve Authorization header so PHP can read Bearer token
+RewriteCond %{HTTP:Authorization} ^(.*)$
+RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
+
 # Bypass rewrite for static assets
 RewriteRule ^(Public/.*)$ $1 [L,NC]
 RewriteRule ^(.*\.(css|js|png|jpg|jpeg|gif|svg|ico))$ $1 [L,NC]

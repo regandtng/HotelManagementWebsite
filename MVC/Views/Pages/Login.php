@@ -43,7 +43,7 @@
 
                 <p class="login-note">
                     <i class="fas fa-info-circle"></i> 
-                    Khách hàng: Dùng số điện thoại để đăng nhập
+                    Khách hàng: Dùng username, email hoặc số điện thoại để đăng nhập
                 </p>
                 
                 <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">

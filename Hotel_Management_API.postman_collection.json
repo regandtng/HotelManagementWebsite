@@ -17,7 +17,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost/Hotel_Management_Website"
+      "value": "http://localhost/HotelManagementWebsite"
     },
     {
       "key": "jwt_token",
@@ -56,6 +56,7 @@
                 "exec": [
                   "if (pm.response.code === 200) {",
                   "    const response = pm.response.json();",
+                  "    pm.environment.set('jwt_token', response.data.token);",
                   "    pm.collectionVariables.set('jwt_token', response.data.token);",
                   "    console.log('Token saved:', response.data.token);",
                   "}"
