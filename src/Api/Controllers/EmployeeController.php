@@ -87,6 +87,16 @@ class EmployeeController extends BaseApiController {
             if (!$empModel->find($id)) return $this->response->notFound('Employee not found');
             $data = $this->request->all();
             
+            // Validate fields if provided
+            $validationRules = [];
+            if (isset($data['name'])) $validationRules['name'] = ['required'];
+            if (isset($data['email'])) $validationRules['email'] = ['required', 'email'];
+            if (isset($data['phone'])) $validationRules['phone'] = ['required'];
+            if (isset($data['position'])) $validationRules['position'] = ['required'];
+            if (isset($data['address'])) $validationRules['address'] = ['required'];
+            if (isset($data['id_card'])) $validationRules['id_card'] = ['required'];
+            if (!empty($validationRules) && !$this->validate($data, $validationRules)) return;
+            
             // Map API fields to database fields
             $dbData = [];
             if (isset($data['name'])) {

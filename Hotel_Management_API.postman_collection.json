@@ -473,7 +473,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@hotel.com\",\n  \"phone\": \"+1234567891\",\n  \"department_id\": 1,\n  \"position\": \"Receptionist\"\n}"
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@hotel.com\",\n  \"phone\": \"+1234567891\",\n  \"department_id\": 1,\n  \"position\": \"Receptionist\"\n \"address\": \"Ba La\"\n \"id_card\": \"000\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/v1/employees",
