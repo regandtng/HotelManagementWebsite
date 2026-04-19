@@ -3,9 +3,9 @@ class GuestModel extends connectDB {
     
     // Tạo tài khoản khách hàng
     public function createGuest($data) {
-        $sql = "INSERT INTO hotels_guests (TenKhachHang, HoKhachHang, EmailKhachHang, 
+        $sql = "INSERT INTO hotels_guests (TenDangNhap, TenKhachHang, HoKhachHang, EmailKhachHang, 
                 SoDienThoaiKhachHang, CMND_CCCDKhachHang, DiaChi, MatKhau) 
-                VALUES ('{$data['TenKhachHang']}', '{$data['HoKhachHang']}', 
+                VALUES ('{$data['TenDangNhap']}', '{$data['TenKhachHang']}', '{$data['HoKhachHang']}', 
                 '{$data['EmailKhachHang']}', '{$data['SoDienThoaiKhachHang']}', 
                 '{$data['CMND_CCCDKhachHang']}', '{$data['DiaChi']}', '{$data['MatKhau']}')";
         return $this->execute($sql);
@@ -38,6 +38,13 @@ class GuestModel extends connectDB {
     // Kiểm tra số điện thoại đã tồn tại
     public function checkPhoneExists($phone) {
         $sql = "SELECT * FROM hotels_guests WHERE SoDienThoaiKhachHang = '$phone'";
+        $result = $this->select($sql);
+        return !empty($result);
+    }
+
+    // Kiểm tra username đã tồn tại
+    public function checkUsernameExists($username) {
+        $sql = "SELECT * FROM hotels_guests WHERE TenDangNhap = '$username'";
         $result = $this->select($sql);
         return !empty($result);
     }

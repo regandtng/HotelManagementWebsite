@@ -3,91 +3,65 @@ class connectDB {
     protected $con;
 
     public function __construct() {
-        $this->con = mysqli_connect(
-            "localhost",
-            "root",
-            "",
-            "web_hotel_mngt"
-        );
+        $host = "127.0.0.1";       
+        $user = "root";
+        $pass = "";
+        $db   = "web_hotel_mngt";   // TÊN DATABASE
+        $port = 3307;               // CỔNG MySQL CỦA BẠN
+
+        $this->con = mysqli_connect($host, $user, $pass, $db, $port);
 
         if (!$this->con) {
-            die("Kết nối DB thất bại!");
+            die("Kết nối DB thất bại! (" . mysqli_connect_errno() . ") " . mysqli_connect_error());
         }
 
-        mysqli_set_charset($this->con, "utf8");
+        mysqli_set_charset($this->con, "utf8mb4");
     }
 
     public function select($sql, $params = []) {
-        $stmt = $this->prepareStatement($sql, $params);
-        $result = mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $data = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
+        $stmt = $this->con->prepare($sql);
+        if ($params) {
+            $types = str_repeat('s', count($params));
+            $stmt->bind_param($types, ...$params);
         }
-        mysqli_stmt_close($stmt);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = [];
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $data[] = $row;
+            }
+        }
         return $data;
     }
 
     public function selectOne($sql, $params = []) {
-        $stmt = $this->prepareStatement($sql, $params);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $data = mysqli_fetch_assoc($result);
-        mysqli_stmt_close($stmt);
-        return $data;
+        $stmt = $this->con->prepare($sql);
+        if ($params) {
+            $types = str_repeat('s', count($params));
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result ? mysqli_fetch_assoc($result) : null;
     }
 
     public function execute($sql, $params = []) {
-        $stmt = $this->prepareStatement($sql, $params);
-        $result = mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-        return $result;
+        $stmt = $this->con->prepare($sql);
+        if ($params) {
+            $types = str_repeat('s', count($params));
+            $stmt->bind_param($types, ...$params);
+        }
+        return $stmt->execute();
     }
 
     public function insertId() {
-        return mysqli_insert_id($this->con);
+        return $this->con->insert_id;
     }
 
-    private function prepareStatement($sql, $params = []) {
-        $stmt = mysqli_prepare($this->con, $sql);
-        if (!$stmt) {
-            die("Lỗi prepare statement: " . mysqli_error($this->con));
+    public function close() {
+        if ($this->con) {
+            $this->con->close();
         }
-
-        if (!empty($params)) {
-            $types = '';
-            foreach ($params as $param) {
-                if (is_int($param)) {
-                    $types .= 'i';
-                } elseif (is_float($param)) {
-                    $types .= 'd';
-                } else {
-                    $types .= 's';
-                }
-            }
-            mysqli_stmt_bind_param($stmt, $types, ...$params);
-        }
-
-        return $stmt;
-    }
-
-    // Backward compatibility methods (deprecated - use prepared statements)
-    public function selectUnsafe($sql) {
-        $result = mysqli_query($this->con, $sql);
-        $data = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
-        }
-        return $data;
-    }
-
-    public function selectOneUnsafe($sql) {
-        $result = mysqli_query($this->con, $sql);
-        return mysqli_fetch_assoc($result);
-    }
-
-    public function executeUnsafe($sql) {
-        return mysqli_query($this->con, $sql);
     }
 }

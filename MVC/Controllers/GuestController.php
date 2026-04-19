@@ -13,6 +13,7 @@ class GuestController extends controller {
             $model = $this->model("GuestModel");
             
             $data = [
+                'TenDangNhap' => $_POST['username'],
                 'TenKhachHang' => $_POST['ten'],
                 'HoKhachHang' => $_POST['ho'],
                 'EmailKhachHang' => $_POST['email'],
@@ -24,6 +25,11 @@ class GuestController extends controller {
             
             if ($_POST['password'] !== $_POST['confirm_password']) {
                 echo "<script>alert('Mật khẩu xác nhận không khớp!'); window.history.back();</script>";
+                return;
+            }
+
+            if ($model->checkUsernameExists($data['TenDangNhap'])) {
+                echo "<script>alert('Tên đăng nhập đã được sử dụng!'); window.history.back();</script>";
                 return;
             }
             

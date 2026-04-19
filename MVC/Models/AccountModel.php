@@ -12,9 +12,9 @@ class AccountModel extends connectDB {
         return $this->selectOne($sql);
     }
 
-    // MỚI: Kiểm tra Khách hàng (Đăng nhập bằng Số điện thoại)
-    public function checkGuestLogin($phone, $pass) {
-        $sql = "SELECT * FROM hotels_guests WHERE SoDienThoaiKhachHang = '$phone' AND MatKhau = '$pass'";
+    // MỚI: Kiểm tra Khách hàng (Đăng nhập bằng username, email hoặc số điện thoại)
+    public function checkGuestLogin($username, $pass) {
+        $sql = "SELECT * FROM hotels_guests WHERE (TenDangNhap = '$username' OR EmailKhachHang = '$username' OR SoDienThoaiKhachHang = '$username') AND MatKhau = '$pass'";
         return $this->selectOne($sql);
     }
 

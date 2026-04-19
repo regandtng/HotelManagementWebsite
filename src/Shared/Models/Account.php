@@ -3,7 +3,7 @@ namespace Shared\Models;
 
 class Account extends BaseModel {
     protected $table = 'authentication_admin';
-    protected $primaryKey = 'MaAdmin';
+    protected $primaryKey = 'MaAdmin';  // Correct primary key
 
     /**
      * Tìm account theo username
