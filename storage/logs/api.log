@@ -354,3 +354,67 @@ Error finding record: Table 'web_hotel_mngt.room_types_roomtype' doesn't exist
 #3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
 #4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
 #5 {main}
+[2026-04-19 16:22:08] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:23:02] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:23:03] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:23:05] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:23:06] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:24:25] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:24:27] ERROR: Error in EmployeeController::store
+Error creating record: Duplicate entry '' for key 'CMND_CCCD'
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(73): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}
+[2026-04-19 16:30:17] ERROR: Error in EmployeeController::store
+Error creating record: Cannot add or update a child row: a foreign key constraint fails (`web_hotel_mngt`.`hotels_employees`, CONSTRAINT `FK_DepartmentId_Employee` FOREIGN KEY (`MaBoPhan`) REFERENCES `hotels_departments` (`MaBoPhan`) ON DELETE SET NULL ON UPDATE CASCADE)
+#0 C:\xampp\htdocs\Hotel_Management_Website\src\Api\Controllers\EmployeeController.php(75): Shared\Models\BaseModel->create(Array)
+#1 [internal function]: Api\Controllers\EmployeeController->store()
+#2 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(114): call_user_func(Array)
+#3 C:\xampp\htdocs\Hotel_Management_Website\src\Shared\Http\Router.php(54): Shared\Http\Router->handleRoute(Array, Array)
+#4 C:\xampp\htdocs\Hotel_Management_Website\api.php(55): Shared\Http\Router->dispatch()
+#5 {main}

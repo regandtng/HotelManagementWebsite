@@ -37,7 +37,9 @@ class EmployeeController extends BaseApiController {
                 'name' => ['required'], 
                 'email' => ['required', 'email'],
                 'phone' => ['required'],
-                'position' => ['required']
+                'position' => ['required'],
+                'address' => ['required'],
+                'id_card' => ['required']
             ])) return;
 
             // Generate new employee ID
