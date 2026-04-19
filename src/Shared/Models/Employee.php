@@ -3,6 +3,7 @@ namespace Shared\Models;
 
 class Employee extends BaseModel {
     protected $table = 'hotels_employees';
+    protected $primaryKey = 'MaNhanVien';
 
     /**
      * Tìm employees theo department

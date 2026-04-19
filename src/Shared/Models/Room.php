@@ -3,6 +3,7 @@ namespace Shared\Models;
 
 class Room extends BaseModel {
     protected $table = 'rooms_room';
+    protected $primaryKey = 'MaPhong';
 
     /**
      * Tìm rooms theo type

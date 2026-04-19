@@ -154,9 +154,25 @@ class AuthController extends BaseApiController {
     }
 
     /**
-     * Đăng xuất (client-side chỉ cần xóa token)
+     * Đăng xuất và blacklist token
      */
     public function logout() {
-        $this->response->success([], 'Đăng xuất thành công');
+        try {
+            $token = JWT::getTokenFromHeader();
+            if (!$token) {
+                $this->response->unauthorized('Token không hợp lệ hoặc không tìm thấy');
+                return;
+            }
+
+            if (!JWT::blacklistToken($token)) {
+                $this->response->unauthorized('Không thể đăng xuất với token này');
+                return;
+            }
+
+            $this->response->success([], 'Đăng xuất thành công');
+        } catch (\Exception $e) {
+            $this->logError('Logout error', $e);
+            $this->response->error('Lỗi đăng xuất: ' . $e->getMessage());
+        }
     }
 }

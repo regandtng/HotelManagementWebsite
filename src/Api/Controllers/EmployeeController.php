@@ -33,8 +33,44 @@ class EmployeeController extends BaseApiController {
     public function store() {
         try {
             $data = $this->request->all();
-            if (!$this->validate($data, ['name' => ['required'], 'email' => ['email']])) return;
-            $emp = $this->model('Employee')->create($data);
+            if (!$this->validate($data, [
+                'name' => ['required'], 
+                'email' => ['required', 'email'],
+                'phone' => ['required'],
+                'position' => ['required']
+            ])) return;
+
+            // Generate new employee ID
+            $empModel = $this->model('Employee');
+            $allEmps = $empModel->all();
+            $maxId = 0;
+            foreach ($allEmps as $emp) {
+                $idStr = str_replace('NV', '', $emp['MaNhanVien']);
+                $id = (int)$idStr;
+                if ($id > $maxId) $maxId = $id;
+            }
+            $newId = 'NV' . str_pad($maxId + 1, 3, '0', STR_PAD_LEFT);
+
+            // Split name into first and last name
+            $nameParts = explode(' ', $data['name'], 2);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
+
+            // Map API fields to database fields
+            $dbData = [
+                'MaNhanVien' => $newId,
+                'TenNhanVien' => $lastName,
+                'HoNhanVien' => $firstName,
+                'ChucDanhNV' => $data['position'],
+                'SoDienThoaiNV' => $data['phone'],
+                'EmailNhanVien' => $data['email'],
+                'NgayVaoLam' => date('Y-m-d'),
+                'DiaChi' => $data['address'] ?? '',
+                'MaBoPhan' => $data['department_id'] ?? 'BP_LT',
+                'CMND_CCCD' => $data['id_card'] ?? ''
+            ];
+
+            $emp = $empModel->create($dbData);
             return $this->response->created(EmployeeResource::transform($emp));
         } catch (\Exception $e) {
             $this->logError('Error in EmployeeController::store', $e);
@@ -48,7 +84,22 @@ class EmployeeController extends BaseApiController {
             $empModel = $this->model('Employee');
             if (!$empModel->find($id)) return $this->response->notFound('Employee not found');
             $data = $this->request->all();
-            $emp = $empModel->update($id, $data);
+            
+            // Map API fields to database fields
+            $dbData = [];
+            if (isset($data['name'])) {
+                $nameParts = explode(' ', $data['name'], 2);
+                $dbData['TenNhanVien'] = $nameParts[1] ?? '';
+                $dbData['HoNhanVien'] = $nameParts[0] ?? '';
+            }
+            if (isset($data['position'])) $dbData['ChucDanhNV'] = $data['position'];
+            if (isset($data['phone'])) $dbData['SoDienThoaiNV'] = $data['phone'];
+            if (isset($data['email'])) $dbData['EmailNhanVien'] = $data['email'];
+            if (isset($data['address'])) $dbData['DiaChi'] = $data['address'];
+            if (isset($data['department_id'])) $dbData['MaBoPhan'] = $data['department_id'];
+            if (isset($data['id_card'])) $dbData['CMND_CCCD'] = $data['id_card'];
+            
+            $emp = $empModel->update($id, $dbData);
             return $this->response->success(EmployeeResource::transform($emp));
         } catch (\Exception $e) {
             $this->logError('Error in EmployeeController::update', $e);

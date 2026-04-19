@@ -117,6 +117,7 @@ class GuestController extends BaseApiController {
             }
 
             $data = $this->request->all();
+            unset($data['id']); // Remove route param from update data
 
             $guestModel = $this->model('Guest');
             $guest = $guestModel->find($id);

@@ -2,6 +2,7 @@
 namespace Shared\Models;
 
 class Service extends BaseModel {
-    protected $table = 'services_service';
+    protected $table = 'hotelservice_services'; // Correct table name
+    protected $primaryKey = 'MaDichVu';
 }
 ?>

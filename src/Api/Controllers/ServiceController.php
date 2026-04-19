@@ -8,14 +8,10 @@ class ServiceController extends BaseApiController {
     
     public function index() {
         try {
-            $page = $this->getPage();
-            $perPage = $this->getPerPage();
-
             $serviceModel = $this->model('Service');
-            $services = $serviceModel->paginate($page, $perPage);
-            $total = $serviceModel->count();
+            $services = $serviceModel->all();
 
-            return $this->response->paginate(ServiceResource::collection($services), $total, $page, $perPage);
+            return $this->response->success(ServiceResource::collection($services));
         } catch (\Exception $e) {
             $this->logError('Error in ServiceController::index', $e);
             return $this->response->error($e->getMessage(), 500);
@@ -48,7 +44,29 @@ class ServiceController extends BaseApiController {
                 return;
             }
 
-            $service = $this->model('Service')->create($data);
+            // Generate new service ID
+            $serviceModel = $this->model('Service');
+            $allServices = $serviceModel->all();
+            $maxId = 0;
+            foreach ($allServices as $service) {
+                $idStr = $service['MaDichVu'];
+                if (preg_match('/#?DV(\d+)/', $idStr, $matches)) {
+                    $id = (int)$matches[1];
+                    if ($id > $maxId) $maxId = $id;
+                }
+            }
+            $newId = 'DV' . str_pad($maxId + 1, 2, '0', STR_PAD_LEFT);
+
+            // Map API fields to database fields
+            $dbData = [
+                'MaDichVu' => $newId,
+                'TenDichVu' => $data['name'],
+                'MoTaDichVu' => $data['description'] ?? '',
+                'ChiPhiDichVu' => $data['price']
+            ];
+
+            $service = $serviceModel->create($dbData);
+            error_log('Created service: ' . json_encode($service));
             return $this->response->created(ServiceResource::transform($service));
         } catch (\Exception $e) {
             $this->logError('Error in ServiceController::store', $e);
@@ -65,7 +83,14 @@ class ServiceController extends BaseApiController {
             if (!$serviceModel->find($id)) return $this->response->notFound('Service not found');
 
             $data = $this->request->all();
-            $service = $serviceModel->update($id, $data);
+            
+            // Map API fields to database fields
+            $dbData = [];
+            if (isset($data['name'])) $dbData['TenDichVu'] = $data['name'];
+            if (isset($data['description'])) $dbData['MoTaDichVu'] = $data['description'];
+            if (isset($data['price'])) $dbData['ChiPhiDichVu'] = $data['price'];
+            
+            $service = $serviceModel->update($id, $dbData);
 
             return $this->response->success(ServiceResource::transform($service));
         } catch (\Exception $e) {

@@ -54,24 +54,107 @@ class JWT {
      * Get token from Authorization header
      */
     public static function getTokenFromHeader() {
-        $headers = getallheaders();
-        if (isset($headers['Authorization'])) {
-            $authHeader = $headers['Authorization'];
-            if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-                return $matches[1];
+        $authHeader = null;
+
+        if (function_exists('getallheaders')) {
+            $headers = getallheaders();
+            if (isset($headers['Authorization'])) {
+                $authHeader = $headers['Authorization'];
             }
         }
+
+        if (!$authHeader && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        }
+
+        if (!$authHeader && isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $authHeader = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        }
+
+        if ($authHeader && preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            return $matches[1];
+        }
+
         return null;
     }
 
     /**
-     * Validate token
+     * Validate token and blacklist status
      */
     public static function validateToken() {
         $token = self::getTokenFromHeader();
         if (!$token) {
             return false;
         }
+
+        if (self::isTokenBlacklisted($token)) {
+            return false;
+        }
+
         return self::decode($token);
+    }
+
+    /**
+     * Blacklist a token so it cannot be used again
+     */
+    public static function blacklistToken($token) {
+        $payload = self::decode($token);
+        if (!$payload) {
+            return false;
+        }
+
+        $blacklistFile = self::getBlacklistFilePath();
+        $blacklist = self::loadBlacklist($blacklistFile);
+        $blacklist[$token] = $payload['exp'];
+        self::saveBlacklist($blacklistFile, $blacklist);
+        return true;
+    }
+
+    /**
+     * Check if token is blacklisted
+     */
+    public static function isTokenBlacklisted($token) {
+        $blacklistFile = self::getBlacklistFilePath();
+        $blacklist = self::loadBlacklist($blacklistFile);
+        return isset($blacklist[$token]);
+    }
+
+    private static function getBlacklistFilePath() {
+        $basePath = defined('BASE_PATH') ? BASE_PATH : dirname(__DIR__, 3);
+        return $basePath . '/storage/token_blacklist.json';
+    }
+
+    private static function loadBlacklist($path) {
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $content = @file_get_contents($path);
+        if (!$content) {
+            return [];
+        }
+
+        $blacklist = json_decode($content, true);
+        if (!is_array($blacklist)) {
+            return [];
+        }
+
+        $currentTime = time();
+        foreach ($blacklist as $token => $expiresAt) {
+            if ($expiresAt <= $currentTime) {
+                unset($blacklist[$token]);
+            }
+        }
+
+        return $blacklist;
+    }
+
+    private static function saveBlacklist($path, $blacklist) {
+        $directory = dirname($path);
+        if (!is_dir($directory)) {
+            @mkdir($directory, 0755, true);
+        }
+
+        @file_put_contents($path, json_encode($blacklist));
     }
 }
