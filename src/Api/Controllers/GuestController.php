@@ -80,6 +80,8 @@ class GuestController extends BaseApiController {
                 'name' => ['required'],
                 'email' => ['required', 'email'],
                 'phone' => ['required'],
+                'id_card' => ['required'],
+                'password' => ['required', 'min:6'],
             ])) {
                 return; // Response already sent by validate()
             }
@@ -91,6 +93,15 @@ class GuestController extends BaseApiController {
             if ($existingGuest) {
                 return $this->response->error('Email already exists', 409);
             }
+
+            // Check if phone already exists
+            $existingPhone = $guestModel->findByPhone($data['phone']);
+            if ($existingPhone) {
+                return $this->response->error('Phone already exists', 409);
+            }
+
+            // Hash password
+            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
             $guest = $guestModel->create($data);
 

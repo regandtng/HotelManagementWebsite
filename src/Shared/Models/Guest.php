@@ -74,6 +74,8 @@ class Guest extends BaseModel {
             'email' => 'EmailKhachHang',
             'phone' => 'SoDienThoaiKhachHang',
             'address' => 'DiaChi',
+            'id_card' => 'CMND_CCCDKhachHang',
+            'password' => 'MatKhau',
         ];
 
         foreach ($data as $key => $value) {

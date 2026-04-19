@@ -12,6 +12,8 @@ class EmployeeResource {
             'name' => trim(($employee['HoNhanVien'] ?? '') . ' ' . ($employee['TenNhanVien'] ?? '')),
             'email' => $employee['EmailNhanVien'] ?? null,
             'phone' => $employee['SoDienThoaiNV'] ?? null,
+            'address' => $employee['DiaChi'] ?? null,
+            'id_card' => $employee['CMND_CCCD'] ?? null,
             'department_id' => $employee['MaBoPhan'] ?? null,
             'position' => $employee['ChucDanhNV'] ?? null,
             'created_at' => $employee['NgayVaoLam'] ?? null,

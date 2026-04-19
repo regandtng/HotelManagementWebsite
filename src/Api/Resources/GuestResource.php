@@ -22,7 +22,7 @@ class GuestResource {
             'email' => $guest['EmailKhachHang'] ?? null,
             'phone' => $guest['SoDienThoaiKhachHang'] ?? null,
             'address' => $guest['DiaChi'] ?? null,
-            'national_id' => $guest['CMND_CCCDKhachHang'] ?? null,
+            'id_card' => $guest['CMND_CCCDKhachHang'] ?? null,
             'created_at' => $guest['NgayTao'] ?? null,
             'updated_at' => $guest['NgayTao'] ?? null,
         ];
