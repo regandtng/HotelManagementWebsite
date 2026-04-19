@@ -97,9 +97,15 @@ class BaseModel {
             $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
             $this->dbInstance->execute($sql, array_values($data));
 
-            // Get the last inserted ID
-            $lastId = $this->dbInstance->insertId();
-            return $this->find($lastId);
+            // Return the inserted record from database when possible
+            $insertedId = $this->dbInstance->insertId();
+            if ($insertedId) {
+                return $this->find($insertedId) ?: $data;
+            }
+            if (isset($data[$this->primaryKey])) {
+                return $this->find($data[$this->primaryKey]) ?: $data;
+            }
+            return $data; // Return the data as-is if can't determine the inserted key
         } catch (\Exception $e) {
             throw new \Exception("Error creating record: " . $e->getMessage());
         }

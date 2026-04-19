@@ -11,10 +11,10 @@ class ServiceResource {
         if (!$service) return null;
         
         return [
-            'id' => $service['id'] ?? null,
-            'name' => $service['name'] ?? null,
-            'description' => $service['description'] ?? null,
-            'price' => $service['price'] ?? null,
+            'id' => $service['MaDichVu'] ?? null,
+            'name' => $service['TenDichVu'] ?? null,
+            'description' => $service['MoTaDichVu'] ?? null,
+            'price' => $service['ChiPhiDichVu'] ?? null,
             'created_at' => $service['created_at'] ?? null,
             'updated_at' => $service['updated_at'] ?? null,
         ];
